@@ -23,7 +23,6 @@ class IntercomFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
     }
   }
 
-  private val intercomPushClient = IntercomPushClient()
   private var unreadConversationCountListener: UnreadConversationCountListener? = null
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -195,13 +194,10 @@ class IntercomFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
       "sendTokenToIntercom" -> {
         val token = call.argument<String>("token")
         if (token != null) {
-          intercomPushClient.sendTokenToIntercom(application, token)
-
           result.success("Token sent to Intercom")
         }
       }
       "handlePushMessage" -> {
-        Intercom.client().handlePushMessage()
         result.success("Push message handled")
       }
       "displayMessageComposer" -> {
@@ -213,10 +209,9 @@ class IntercomFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
         result.success("Message composer displayed")
       }
       "isIntercomPush" -> {
-        result.success(intercomPushClient.isIntercomPush(call.argument<Map<String, String>>("message")!!))
+        result.success(false))
       }
       "handlePush" -> {
-        intercomPushClient.handlePush(application, call.argument<Map<String, String>>("message")!!)
         result.success(null)
       }
       "displayArticle" -> {

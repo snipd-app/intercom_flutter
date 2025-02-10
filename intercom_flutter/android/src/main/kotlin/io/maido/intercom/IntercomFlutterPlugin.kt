@@ -209,7 +209,7 @@ class IntercomFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
         result.success("Message composer displayed")
       }
       "isIntercomPush" -> {
-        result.success(false))
+        result.success(false)
       }
       "handlePush" -> {
         result.success(null)

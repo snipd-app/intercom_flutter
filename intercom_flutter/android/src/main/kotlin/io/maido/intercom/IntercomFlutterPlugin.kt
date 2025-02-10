@@ -11,7 +11,6 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.intercom.android.sdk.*
 import io.intercom.android.sdk.identity.Registration
-import io.intercom.android.sdk.push.IntercomPushClient
 
 class IntercomFlutterPlugin : FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler, ActivityAware {
   companion object {

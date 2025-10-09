@@ -216,7 +216,13 @@ class IntercomFlutterWeb extends IntercomFlutterPlatform {
     // shutdown will effectively clear out any user data that you have been passing through the JS API.
     // but not from intercomSettings
     // so manually clear some intercom settings
-    removeIntercomSettings(['user_hash', 'user_id', 'email']);
+    removeIntercomSettings([
+      'user_hash',
+      'intercom_user_jwt',
+      'user_id',
+      'email',
+      'auth_tokens',
+    ]);
     // shutdown
     globalContext.callMethod('Intercom'.toJS, 'shutdown'.toJS);
     print("logout");
@@ -324,6 +330,26 @@ class IntercomFlutterWeb extends IntercomFlutterPlatform {
     }
 
     return {};
+  }
+
+  @override
+  Future<void> setUserJwt(String jwt) async {
+    globalContext.callMethod(
+      'Intercom'.toJS,
+      'update'.toJS,
+      updateIntercomSettings('intercom_user_jwt', jwt).jsify(),
+    );
+    print("jwt added");
+  }
+
+  @override
+  Future<void> setAuthTokens(Map<String, String> tokens) async {
+    globalContext.callMethod(
+      'Intercom'.toJS,
+      'update'.toJS,
+      updateIntercomSettings('auth_tokens', tokens).jsify(),
+    );
+    print("Auth tokens added");
   }
 
   /// get the [window.intercomSettings]

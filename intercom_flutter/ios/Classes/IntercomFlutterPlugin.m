@@ -183,11 +183,18 @@ id unread;
             NSData *encodedToken=[self createDataWithHexString:token];
             // NSData* encodedToken=[token dataUsingEncoding:NSUTF8StringEncoding];
             NSLog(@"%@", encodedToken);
-            [Intercom setDeviceToken:encodedToken failure:^(NSError * _Nonnull error) {
+            [Intercom setDeviceToken:encodedToken success:^{
+                // Handle success
+                result(@"Token set");
+            } failure:^(NSError * _Nonnull error) {
                 // Handle failure
-                NSLog(@"Error setting device token: %@", error.localizedDescription);
+                NSInteger errorCode = error.code;
+                NSString *errorMsg = error.localizedDescription;
+                
+                result([FlutterError errorWithCode:[@(errorCode) stringValue]
+                                           message:errorMsg
+                                           details: [self getIntercomError:errorCode:errorMsg]]);
             }];
-            result(@"Token set");
         }
     } else if([@"displayArticle" isEqualToString:call.method]) {
         NSString *articleId = call.arguments[@"articleId"];
@@ -258,6 +265,26 @@ id unread;
             result(map);
         }
         result([NSMutableDictionary dictionary]);
+    } else if([@"setUserJwt" isEqualToString:call.method]) {
+        NSString *jwt = call.arguments[@"jwt"];
+        [Intercom setUserJwt:jwt];
+        result(@"Jwt added");
+    } else if([@"setAuthTokens" isEqualToString:call.method]) {
+        NSDictionary *tokens = call.arguments[@"tokens"];
+        if (tokens != nil && [tokens count] > 0) {
+            [Intercom setAuthTokens:tokens success:^{
+                // Handle success
+                result(@"Auth tokens added");
+            } failure:^(NSError * _Nonnull error) {
+                // Handle failure
+                NSInteger errorCode = error.code;
+                NSString *errorMsg = error.localizedDescription;
+                
+                result([FlutterError errorWithCode:[@(errorCode) stringValue]
+                                           message:errorMsg
+                                           details: [self getIntercomError:errorCode:errorMsg]]);
+            }];
+        }
     }
     else {
         result(FlutterMethodNotImplemented);
